@@ -1,4 +1,6 @@
 const inquirer = require('inquirer');
+const fs = require('fs');
+const generatePage = require('./src/page-template');
 
 const promptUser = () => {
   return inquirer.prompt([
@@ -61,7 +63,7 @@ Add a New Project
       name: 'name',
       message: 'What is the name of your project?',
       validate: projectNameInput => {
-        if (ProjectNameInput) {
+        if (projectNameInput) {
           return true;
         } else {
           console.log('Please enter your project name!');
@@ -122,25 +124,18 @@ Add a New Project
 };
 
 promptUser()
-  .then(answers => console.log(answers))
   .then(promptProject)
-  .then(projectAnswers => console.log(projectAnswers))
-  .then(projectData => {
-    portfilioData.projects.push(projectData);
-    if (projectData.confirmAddProject) {
-      return promptProject(portfolioData);
-    } else {
-      return portfolioData;
-    }
+  .then(portfolioData => {
+    const pageHTML = generatePage(portfolioData);
+
+    // fs.writeFile('./index.html', pageHTML, err => {
+    //   if (err) throw new Error(err);
+
+    //   console.log('Page created! Check out index.html in this directory to see it!');
+    // });
   });
 
-
-
-
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
-
-// const pageHTML = generatePage(name, github);
+  // const pageHTML = generatePage(name, github);
 
 // fs.writeFile('./index.html', pageHTML, err => {
 //   if (err)
